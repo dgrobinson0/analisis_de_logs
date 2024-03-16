@@ -103,8 +103,9 @@ function trimString(){
 function helpPanel(){
 	echo -e "\n\t${redColour}[!] Uso: ./analisisLogs${endColour}"
 	for i in $(seq 1 80); do echo -ne "${redColour}-"; done; echo -ne "${endColour}"
-	echo -e "\n\n\t${grayColour}[-r]${endColour}${yellowColour} Leer un archivo ${endColour}${blueColour} (Ejemplo: -r access.log)${endColour}"
-	echo -e "\n\n\t${grayColour}[-e]${endColour}${yellowColour} Modo exploración${endColour}"
+	echo -e "\n\n\t${grayColour}[-l]${endColour}${yellowColour} Estandarizar formato, para access log **excriba.prod.uci.cu**${endColour}${blueColour} (Ejemplo: -l path/archivo.log)${endColour}"
+	echo -e "\n\t${grayColour}[-r]${endColour}${yellowColour} Leer un archivo ${endColour}${blueColour} (Ejemplo: -r path/archivo.log)${endColour}"
+	echo -e "\n\t${grayColour}[-e]${endColour}${yellowColour} Modo exploración${endColour}"
 	echo -e "\t\t${purpleColour}logs${endColour}${yellowColour}:\t\t\t Listar los Logs${endColour}"
 	echo -e "\t\t${purpleColour}logs_get${endColour}${yellowColour}:\t\t Listar los logs cuyas peticiones sean: GET${endColour}"
 	echo -e "\t\t${purpleColour}logs_post${endColour}${yellowColour}:\t\t Listar los logs cuyas peticiones sean: POST${endColour}"
@@ -112,7 +113,7 @@ function helpPanel(){
 	echo -e "\n\t${grayColour}[-i]${endColour}${yellowColour} Proporcionar una direccion ip${endColour}${blueColour} (Ejemplo: -i 192.168.1.23)${endColour}"
 	echo -e "\n\t${grayColour}[-f]${endColour}${yellowColour} Proporcionar una fecha${endColour}${blueColour} (Ejemplo: -f 10/Dec/2020)${endColour}"
 	echo -e "\n\t${grayColour}[-d]${endColour}${yellowColour} Mostrar un reporte general${endColour}${blueColour} (Ejemplo: -d report)${endColour}"
-	echo -e "\n\t${grayColour}[-h]${endColour}${yellowColour} Mostrar este panel de ayuda${endColour}\n"
+	echo -e "\n\t${grayColour}[-h]${endColour}${yellowColour} Mostrar este panel de ayuda${endColour}${blueColour}(-- help o -- h) ${endColour}\n"
 	tput cnorm; exit 1
 }
 
@@ -121,8 +122,9 @@ function logs(){
 		if [[ $reporte == "report" ]]; then
                         cat $nombre_archivo | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' | awk 'ORS="\n\n"' > logs_report.txt
                         logs_report_general
-                        echo -e "${blueColour}IP|Fecha|Cant_Peticiones|Cant_Peticiones_GET|Cant_Peticiones_POST${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$inspeccionar_fecha|$cant_pet|$cant_get|$cant_post${endColour}" >> logs.txt
+                        echo -e "${blueColour}IP|Fecha|Cant_Peticiones|GET|POST|Horario_Mas_Activo${endColour}" > logs.txt
+                        echo -e "${yellowColour}$inspeccionar_ip|$inspeccionar_fecha|$cant_pet|$cant_get|$cant_post|$horario_letra${endColour}" >> logs.txt
+			logs_urls_mas_visitada
                         logs_report
                 else
 			echo -e "${yellowColour}$(cat $nombre_archivo | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
@@ -131,8 +133,9 @@ function logs(){
 		if [[ $reporte == "report" ]]; then
 			cat $nombre_archivo | awk -v ip="$inspeccionar_ip" '$1 == ip' > logs_report.txt
 			logs_report_general
-			echo -e "${blueColour}IP|Cant_Peticiones|Cant_Peticiones_GET|Cant_Peticiones_POST|Fecha_Mas_Activa${endColour}" > logs.txt
-			echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$cant_get|$cant_post|$fecha_trafico${endColour}" >> logs.txt
+			echo -e "${blueColour}IP|Cant_Peticiones|GET|POST|Fecha_Mas_Activa|Horario_Mas_Activo${endColour}" > logs.txt
+			echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$cant_get|$cant_post|$fecha_trafico|$horario_letra${endColour}" >> logs.txt
+			logs_urls_mas_visitada
 			logs_report
 		else
 			echo -e "${yellowColour}$(cat $nombre_archivo | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
@@ -141,9 +144,10 @@ function logs(){
 		if [[ $reporte == "report" ]]; then
                         cat $nombre_archivo | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' > logs_report.txt
 			logs_report_general
-			echo -e "${blueColour}Fecha|Cant_Peticiones|Cant_Peticiones_GET|Cant_Peticiones_POST|IP_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_fecha|$cant_pet|$cant_get|$cant_post|$ip_activa${endColour}" >> logs.txt
-                        logs_report
+			echo -e "${blueColour}Fecha|Cant_Peticiones|GET|POST|IP_Mas_Activa|Horario_Mas_Activo${endColour}" > logs.txt
+                        echo -e "${yellowColour}$inspeccionar_fecha|$cant_pet|$cant_get|$cant_post|$ip_activa|$horario_letra${endColour}" >> logs.txt
+                        logs_urls_mas_visitada
+			logs_report
                 else
 			echo -e "${yellowColour}$(cat $nombre_archivo | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
 		fi
@@ -151,127 +155,156 @@ function logs(){
 		if [[ $reporte == "report" ]]; then
                         cat $nombre_archivo  > logs_report.txt
 			logs_report_general
-                        echo -e "${blueColour}Cant_Peticiones|Cant_Peticiones_GET|Cant_Peticiones_POST|IP_Mas_Activa|Fecha_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$cant_pet|$cant_get|$cant_post|$ip_activa|$fecha_trafico${endColour}" >> logs.txt
-                        logs_report
+                        echo -e "${blueColour}Cant_Peticiones|GET|POST|IP_Mas_Activa|Fecha_Mas_Activa|Horario_Mas_Activo${endColour}" > logs.txt
+                        echo -e "${yellowColour}$cant_pet|$cant_get|$cant_post|$ip_activa|$fecha_trafico|$horario_letra${endColour}" >> logs.txt
+                        logs_urls_mas_visitada
+			logs_report
                 else
 			echo -e "${yellowColour}$(cat $nombre_archivo | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
 		fi
 	fi
 }
-
-function logs_get(){
+function logs_peticiones(){
 	if [[ -n $inspeccionar_ip && -n $inspeccionar_fecha ]]; then
                 if [[ $reporte == "report" ]]; then
-                        cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' |  awk 'ORS="\n\n"' > logs_report.txt
+                        cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' |  awk 'ORS="\n\n"' > logs_report.txt
                         logs_report_general
-                        echo -e "${blueColour}IP|Fecha|Cant_Peticiones${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$inspeccionar_fecha|$cant_pet${endColour}" >> logs.txt
-                        logs_report
+                        echo -e "${blueColour}IP|Fecha|Cant_Peticiones|Horario_Mas_Activo${endColour}" > logs.txt
+                        echo -e "${yellowColour}$inspeccionar_ip|$inspeccionar_fecha|$cant_pet|$horario_letra${endColour}" >> logs.txt
+                        logs_urls_mas_visitada
+			logs_report
                 else
-			echo -e "${yellowColor}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColor}"
-        	fi
+			if [ -n "$codigo_respuesta" ]; then
+                                codigo_respuesta_ingresado
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' | awk -v valor="$valor" '$9 ~ "^" valor' | head -n $limitar | awk 'ORS="\n\n"')${endColor}"
+			else
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColor}"
+        		fi
+		fi
 	elif [[ -n $inspeccionar_ip && ! -n $inspeccionar_fecha ]]; then
                 if [[ $reporte == "report" ]]; then
-			cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' | awk -v ip="$inspeccionar_ip" '$1 == ip' > logs_report.txt
+			cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v ip="$inspeccionar_ip" '$1 == ip' > logs_report.txt
 			logs_report_general
-			echo -e "${blueColour}IP|Cant_Peticiones|Fecha_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$fecha_trafico${endColour}" >> logs.txt
+			echo -e "${blueColour}IP|Cant_Peticiones|Fecha_Mas_Activa|Horario_Mas_Activo${endColour}" > logs.txt
+                        echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$fecha_trafico|$horario_letra${endColour}" >> logs.txt
+			logs_urls_mas_visitada
 			logs_report
 		else
-			echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
-        	fi
+			if [ -n "$codigo_respuesta" ]; then
+                                codigo_respuesta_ingresado
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v ip="$inspeccionar_ip" '$1 == ip' | awk -v valor="$valor" '$9 ~ "^" valor' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
+			else
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
+        		fi
+		fi
 	elif [[ -n $inspeccionar_fecha && ! -n $inspeccionar_ip ]]; then
 		if [[ $reporte == "report" ]]; then
-                        cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' > logs_report.txt
+                        cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' > logs_report.txt
                         logs_report_general
-                        echo -e "${blueColour}IP|Cant_Peticiones|IP_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_fecha|$cant_pet|$ip_activa${endColour}" >> logs.txt
+                        echo -e "${blueColour}Fecha|Cant_Peticiones|IP_Mas_Activa|Horario_Mas_Activo${endColour}" > logs.txt
+                        echo -e "${yellowColour}$inspeccionar_fecha|$cant_pet|$ip_activa|$horario_letra${endColour}" >> logs.txt
+                        logs_urls_mas_visitada
                         logs_report
                 else
-                	echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
-        	fi
+			if [ -n "$codigo_respuesta" ]; then
+                                codigo_respuesta_ingresado
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' | awk -v valor="$valor" '$9 ~ "^" valor' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
+                	else
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
+        		fi
+		fi
 	else
 		if [[ $reporte == "report" ]]; then
-                        cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' > logs_report.txt
+                        cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' > logs_report.txt
                         logs_report_general
-                        echo -e "${blueColour}Cant_Peticiones|Fecha_Mas_Activa|IP_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$fecha_trafico|$ip_activa${endColour}" >> logs.txt
+                        echo -e "${blueColour}Cant_Peticiones|Fecha_Mas_Activa|IP_Mas_Activa|Horario_Mas_Activo${endColour}" > logs.txt
+                        echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$fecha_trafico|$ip_activa|$horario_letra${endColour}" >> logs.txt
+                        logs_urls_mas_visitada
                         logs_report
 		else
-			echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "GET"' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
+			if [ -n "$codigo_respuesta" ]; then
+				codigo_respuesta_ingresado
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | awk -v valor="$valor" '$9 ~ "^" valor' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
+			else
+				echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
+			fi
 		fi
 	fi
-
-}
-
-function logs_post(){
-	if [[ -n $inspeccionar_ip && -n $inspeccionar_fecha ]]; then
-		if [[ $reporte == "report" ]]; then
-                        cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' | awk 'ORS="\n\n"' > logs_report.txt
-                        logs_report_general
-                        echo -e "${blueColour}IP|Fecha|Cant_Peticiones${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$inspeccionar_fecha|$cant_pet${endColour}" >> logs.txt
-                        logs_report
-                else
-			echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' | awk -v fecha="$inspeccionar_fecha" -F '- -|[][]|:' '$3 == fecha' | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
-		fi
-	elif [[ -n $inspeccionar_ip && ! -n $inspeccionar_fecha ]]; then
-                if [[ $reporte == "report" ]]; then
-                        cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' | awk -v ip="$inspeccionar_ip" '$1 == ip' > logs_report.txt
-                        logs_report_general
-                        echo -e "${blueColour}IP|Cant_Peticiones|Fecha_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$fecha_trafico${endColour}" >> logs.txt
-                        logs_report
-                else
-			echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' | awk -v ip="$inspeccionar_ip" '$1 == ip' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
-        	fi
-	elif [[ -n $inspeccionar_fecha && ! -n $inspeccionar_ip ]]; then
-		if [[ $reporte == "report" ]]; then
-                        cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' > logs_report.txt
-                        logs_report_general
-                        echo -e "${blueColour}IP|Cant_Peticiones|Fecha_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$fecha_trafico${endColour}" >> logs.txt
-                        logs_report
-                else
-                	echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' | awk -v fecha="$inspeccionar_fecha" -F '[][]|:' '$2 == fecha' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
-        	fi
-	else
-		if [[ $reporte == "report" ]]; then
-                        cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' > logs_report.txt
-                        logs_report_general
-                        echo -e "${blueColour}Cant_Peticiones|Fecha_Mas_Activa|IP_Mas_Activa${endColour}" > logs.txt
-                        echo -e "${yellowColour}$inspeccionar_ip|$cant_pet|$fecha_trafico|$ip_activa${endColour}" >> logs.txt
-                        logs_report
-                else
-			echo -e "${yellowColour}$(cat $nombre_archivo | tr -d '"' | awk '$6 == "POST"' | head -n $limitar | awk 'ORS="\n\n"')${endColour}"
-		fi
-	fi
-
 }
 
 function logs_report_general(){
-        cant_pet=$(cat logs_report.txt | tr -d '"' | awk '$6 == "GET" || $6 == "POST"' | wc -l)
+	#declaracion de variables
+        cant_pet=$(cat logs_report.txt | wc -l)
+#	cant_pet_peticion=$(cat logs_report.txt | tr -d '"' | awk -v peticion="$peticion" '$6 == peticion' | wc -l)
         cant_get=$(cat logs_report.txt | tr -d '"' | awk '$6 == "GET"' |  wc -l)
         cant_post=$(cat logs_report.txt | tr -d '"' | awk '$6 == "POST"' |  wc -l)
-        fecha_trafico=$(cat logs_report.txt | awk '{print $4}' | tr -d '[' | awk -F ':' '{print $1}' | uniq -c | sort -nr | head -n 1 | awk '{print $2}')
+	fecha_trafico=$(cat logs_report.txt | awk '{print $4}' | tr -d '[' | awk -F ':' '{print $1}' | uniq -c | sort -nr | head -n 1 | awk '{print $2}')
         ip_activa=$(cat logs_report.txt | awk '{print $1}' | uniq -c | sort -nr | head -n 1 | awk '{print $2}')
+	url_activa=$(cat logs_report.txt | awk '{print $7}' | uniq -c | sort -nr | head -n 5)
+	cant_pet_madrugada=$(cat logs_report.txt | awk -F ':' '$2 >= "00" && $2 <= "06"' | wc -l)
+	cant_pet_dia=$(cat logs_report.txt | awk -F ':' '$2 >= "07" && $2 <= "19"' | wc -l)
+	cant_pet_noche=$(cat logs_report.txt | awk -F ':' '$2 >= "20" && $2 <= "23"' | wc -l)
+	#codigo_respuesta_200=$(cat logs_report.txt | awk '{print $9}' | awk '/^2/ {print}')
+
+	#llamada a funciones
+	horario_mas_visitado
+#	porciento_horario_mas_visitado
+	echo -e "$horario"
 }
 
+function logs_urls_mas_visitada(){
+	echo -e "${blueColour}URL Mas Visitada${endColour}" >> logs1.txt
+        echo -e "${yellowColour}$url_activa${endColour}" >> logs1.txt
+
+}
+function horario_mas_visitado(){
+	if [ "$cant_pet_madrugada" -gt "$cant_pet_dia" ] && [ "$cant_pet_madrugada" -gt "$cant_pet_noche" ]; then
+		horario="$cant_pet_madrugada"
+		horario_letra="Madrugada [12a.m--7a.m]"
+    	elif [ "$cant_pet_dia" -gt "$cant_pet_madrugada" ] && [ "$cant_pet_dia" -gt "$cant_pet_noche" ]; then
+        	horario="$cant_pet_dia"
+		horario_letra="Día [7a.m--8p.m]"
+    	elif [ "$cant_pet_noche" -gt "$cant_pet_dia" ] && [ "$cant_pet_noche" -gt "$cant_pet_madrugada" ]; then
+		horario="$cant_pet_noche"
+		horario_letra="Noche [8p.m--12a.m]"
+    	fi
+}
+function codigo_respuesta_ingresado(){
+	if [ "$codigo_respuesta" == "200" ]; then
+		valor=2
+	elif [ "$codigo_respuesta" == "300" ]; then
+		valor=3
+	elif [ "$codigo_respuesta" == "400" ]; then
+                valor=4
+	elif [ "$codigo_respuesta" == "500" ]; then
+                valor=5
+	fi
+}
+#function porciento_horario_mas_visitado(){
+#    	if [ -n "$peticion" ]; then
+#        	porciento=$(($horario * 100 / $cant_pet_peticion))
+#    	else
+#		echo -e "$peticion"
+#        	porciento=$(($horario * 100 / $cant_pet))
+#    	fi
+#}
 function logs_report(){
 	printTable '|' "$(cat logs.txt)"
-        rm logs_report.txt logs.txt
+	printTable '|' "$(cat logs1.txt)"
+        rm logs_report.txt logs.txt logs1.txt
 }
 
 parameter_counter=0
 limitar=30
-while getopts "d:r:e:n:i:f:h:" arg; do
+while getopts "d:r:e:n:i:f:h:l:c:" arg; do
 	case $arg in
 		r) nombre_archivo=$OPTARG;;
+		l) estandar_archivo=$OPTARG; let parameter_counter+=1;;
 		e) modo_exploracion=$OPTARG; let parameter_counter+=1;;
 		n) limitar=$OPTARG; let parameter_counter+=1;;
 		i) inspeccionar_ip=$OPTARG; let parameter_counter+=1;;
 		f) inspeccionar_fecha=$OPTARG; let parameter_counter+=1;;
+		c) codigo_respuesta=$OPTARG; let parameter_counter+=1;;
 		d) reporte=$OPTARG; let parameter_counter+=1;;
 		h) helpPanel;;
 	esac
@@ -280,11 +313,20 @@ done
 if [ $parameter_counter == 0 ]; then
 	helpPanel
 else
-	if [ "$(echo $modo_exploracion)" == "logs" ]; then
-		logs
-	elif [ "$(echo $modo_exploracion)" == "logs_get" ]; then
-		logs_get
-	elif [ "$(echo $modo_exploracion)" == "logs_post" ]; then
-		logs_post
-	fi
+	case $modo_exploracion in
+		logs) logs;;
+		logs_get) peticion="GET"; logs_peticiones;;
+		logs_post) peticion="POST"; logs_peticiones;;
+	esac
+
+#        if [ -n $estandar_archivo ]; then
+#                if [ "$(cat $estandar_archivo | awk '{print $1}' | head -n 1)" == "$(cat $estandar_archivo | awk '{print $2}' | head -n 1)" ]; then
+#                        cat $estandar_archivo | awk '{$2=""; print $0}' > tmp.log
+#                        cat tmp.log > $estandar_archivo
+#                        rm tmp.log
+#                        echo -e "\n\t${yellowColour}[*] Archivo estandarizado satisfactoriamente.${endColour}"
+#                else
+#                        echo -e "\n\t${yellowColour}[*] El archivo ya se encuentra estandarizado${endColour}"
+#                fi
+#	fi
 fi
