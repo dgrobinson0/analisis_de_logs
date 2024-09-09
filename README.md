@@ -1,4 +1,4 @@
-# Log_Analysis
+# analisisLogs
 
 ![Manintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 ![GitHub last commit (master)](https://img.shields.io/github/last-commit/dgrobinson0/analisis_de_logs)
