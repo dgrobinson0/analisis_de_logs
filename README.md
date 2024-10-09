@@ -9,12 +9,12 @@ El script cuenta con varias opciones de filtrado de datos para facilitar la visu
 
 Ejemplos de uso
 ```
-./analisisLogs -l excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log
-./analisisLogs -r excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -n 10
-./analisisLogs -r excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -n 10
-./analisisLogs -r excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10
-./analisisLogs -r excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs_get -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10
-./analisisLogs -r excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs_post -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10
-./analisisLogs -r excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -d report
-./analisisLogs -r excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -d report
+./analisisLogs -l logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log
+./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -n 10
+./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -n 10
+./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10
+./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs_get -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10
+./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs_post -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10
+./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -d report
+./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -d report
 ```
