@@ -120,14 +120,14 @@ function helpPanel(){
 	echo -e "\n\t${grayColour}[-d]${endColour}${yellowColour} Mostrar un reporte general${endColour}${blueColour} (Ejemplo: -d report)${endColour}"
 	echo -e "\n\t${grayColour}[-h]${endColour}${yellowColour} Mostrar este panel de ayuda${endColour}${blueColour}(-- help o -- h) ${endColour}\n"
 	echo -e "\n\t${yellowColour} Ejemplos de uso:${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -l logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -n 10${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -n 10${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs_get -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs_post -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -d report${endColour}"
-	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba.prod.uci.cu/excriba.prod.uci.cu_access_log.2023-11-24.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -d report${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -l logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log -e logs -i 127.0.0.1 -n 10${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -n 10${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log -e logs_get -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log -e logs_post -i 127.0.0.1 -f 24/Nov/2023 -c 200 -n 10${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log -e logs -d report${endColour}"
+	echo -e "\t\t${blueColour}./analisisLogs -r logs_de_prueba/excriba_access_log/excriba.prod.uci.cu_access_log.2024-01-11.log -e logs -i 127.0.0.1 -f 24/Nov/2023 -d report${endColour}"
 	tput cnorm; exit 1
 }
 
